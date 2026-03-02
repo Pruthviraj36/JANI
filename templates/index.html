@@ -91,7 +91,7 @@
             <div class="kpi-val" id="kpi-rate">—</div>
             <div class="kpi-bar" style="width:40%"></div>
           </div>
-          <div class="kpi-card k-amber">
+          <div class="kpi-card k-amber glass">
             <div class="kpi-top">
               <span class="kpi-label">Avg Confidence</span>
               <span class="kpi-delta warn">Model</span>
@@ -411,6 +411,30 @@
             <div class="sig-head">Key Risk Signals</div>
             <div class="sig-body" id="sb"></div>
           </div>
+
+          <!-- AI INTELLIGENCE WOW FEATURE -->
+          <div class="card glass" id="ai-intel-card"
+            style="display:none; margin-top:1rem; border-left:3px solid var(--blue); animation: pop 0.6s var(--spring);">
+            <div class="card-head" style="padding:0.75rem 1.25rem; border-bottom:1px solid var(--border);">
+              <div class="card-head-left">
+                <div class="c-title"
+                  style="color:var(--blue); font-size:0.75rem; display:flex; align-items:center; gap:0.5rem;">
+                  <span>✧</span> AI RISK INTELLIGENCE REPORT
+                </div>
+              </div>
+            </div>
+            <div class="card-body" style="padding:1.25rem;">
+              <p id="ai-intel-text" style="font-size:0.82rem; line-height:1.6; color:var(--t2); font-style:italic;"></p>
+              <div style="margin-top:1rem; display:flex; align-items:center; gap:0.5rem;">
+                <div
+                  style="width:10px; height:10px; border-radius:50%; background:var(--blue); opacity:0.6; animation:pulse-blue 2s infinite;">
+                </div>
+                <span style="font-size:0.65rem; color:var(--t3); font-weight:600; text-transform:uppercase;">Live Model
+                  Interpretation active</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
 
       <!-- ════════════════════════════════════
@@ -431,7 +455,7 @@
             <div class="kpi-val" id="rep-total">0</div>
             <div class="kpi-bar"></div>
           </div>
-          <div class="kpi-card k-green">
+          <div class="kpi-card k-green glass">
             <div class="kpi-top"><span class="kpi-label">Low Risk</span></div>
             <div class="kpi-val" id="rep-low">0</div>
             <div class="kpi-bar"></div>
@@ -444,7 +468,7 @@
         </div>
 
         <div class="mid-row">
-          <div class="card">
+          <div class="card glass">
             <div class="card-head">
               <div class="card-head-left">
                 <div class="c-title">Risk Breakdown</div>
@@ -550,7 +574,7 @@
         </div>
 
         <!-- Features List -->
-        <div class="card" style="margin-top:1.25rem">
+        <div class="card glass" style="margin-top:1.25rem">
           <div class="card-head">
             <div class="card-head-left">
               <div class="c-title">🗂 Features Used in Training</div>

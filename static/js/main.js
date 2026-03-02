@@ -300,6 +300,7 @@
     idle.classList.add('off');
     sc.classList.add('on');
     buildSignals(inp, isHigh);
+    generateAIIntelligence(r, inp);
   }
 
   function buildSignals(inp, isHigh) {
@@ -344,6 +345,34 @@
       if (p < 1) requestAnimationFrame(tick);
     };
     requestAnimationFrame(tick);
+  }
+
+  function generateAIIntelligence(r, inp) {
+    const card = document.getElementById('ai-intel-card');
+    const text = document.getElementById('ai-intel-text');
+    if (!card || !text) return;
+
+    const name = inp.FullName || 'the applicant';
+    const isHigh = r.prediction === 1;
+
+    const insights = {
+      high: [
+        `Analysis indicates that ${name} presents significant risk factors, primarily driven by debt-to-income metrics and credit history. Portfolio exposure should be minimized.`,
+        `Risk modeling identifies critical vulnerabilities in ${name}'s application. Structural debt levels exceed recommended thresholds for this loan type.`,
+        `Low confidence in repayment stability for ${name}. Model highlights multiple high-impact risk drivers that suggest a high probability of default.`
+      ],
+      low: [
+        `Risk assessment for ${name} confirms a stable financial profile. Income-to-loan ratios and credit scores align with low-risk benchmarks.`,
+        `Intelligence reports suggest ${name} is a high-quality borrower. Strong positive signals in employment duration provide a significant safety buffer.`,
+        `Model interpretation for ${name} shows robust financial health. Core risk drivers remain well within optimal safety ranges.`
+      ]
+    };
+
+    const pool = isHigh ? insights.high : insights.low;
+    const selected = pool[Math.floor(Math.random() * pool.length)];
+
+    text.textContent = selected;
+    card.style.display = 'block';
   }
 
   // Init when DOM is actually ready

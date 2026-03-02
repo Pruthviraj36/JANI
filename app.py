@@ -1,6 +1,8 @@
 import os
 from flask import Flask, render_template, request, jsonify
 import joblib
+import pandas as pd
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -47,9 +49,6 @@ def index():
 @app.route('/predict', methods=['POST'])
 def predict():
     try:
-        import pandas as pd
-        from datetime import datetime
-
         data = request.get_json(force=True)
         full_name = data.get('FullName', 'Unknown Borrower')
 
