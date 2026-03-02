@@ -37,6 +37,9 @@
         <button class="sb-link" data-page="reports">
           <span class="sb-icon">≡</span> Reports
         </button>
+        <button class="sb-link" data-page="about">
+          <span class="sb-icon">ⓘ</span> About Model
+        </button>
       </nav>
       <div class="sb-section-label" style="margin-top:auto">System</div>
       <nav class="sb-nav sb-bottom">
@@ -585,6 +588,87 @@
           </div>
         </div>
 
+      </section>
+
+      <!-- ════════════════════════════════════
+         PAGE: ABOUT MODEL
+      ═════════════════════════════════════ -->
+      <section id="page-about" style="display:none">
+        <div style="margin-bottom:1.25rem">
+          <div class="eyebrow">ⓘ System Intelligence</div>
+          <div style="font-size:1.3rem;font-weight:800;letter-spacing:-.03em">About the RiskIQ Model</div>
+          <div style="font-size:.8rem;color:var(--t3);margin-top:.3rem">Technical documentation for the underlying AI
+            architecture</div>
+        </div>
+
+        <div class="card glass">
+          <div class="card-head">
+            <div class="card-head-left">
+              <div class="c-title">🤖 Model Architecture: LightGBM</div>
+              <div class="c-sub">Gradient Boosting Decision Tree (GBDT)</div>
+            </div>
+          </div>
+          <div class="card-body" style="line-height:1.7; color:var(--t2); font-size:0.9rem;">
+            <p>The <strong>RiskIQ Dashboard</strong> is powered by <strong>LightGBM</strong>, a high-performance,
+              distributed gradient boosting framework developed by Microsoft. It is specifically designed for speed and
+              efficiency when handling large-scale tabular data.</p>
+
+            <h4 style="color:var(--blue); margin: 1.5rem 0 0.5rem 0;">Key Technical Features:</h4>
+            <ul style="padding-left:1.5rem; margin-bottom:1rem;">
+              <li><strong>Leaf-wise Tree Growth</strong>: Unlike most GBDT frameworks that grow trees level-wise,
+                LightGBM grows trees leaf-wise. This strategy chooses the leaf with max delta loss to grow, resulting in
+                lower loss and higher accuracy.</li>
+              <li><strong>GOSS (Gradient-based One-Side Sampling)</strong>: A novel technique that identifies data
+                instances with larger gradients to contribute more to information gain, significantly reducing
+                computation time without sacrificing precision.</li>
+              <li><strong>EFB (Exclusive Feature Bundling)</strong>: Bundles sparse, mutually exclusive features to
+                reduce the dimensionality of the feature space, improving training speed.</li>
+            </ul>
+
+            <h4 style="color:var(--blue); margin: 1.5rem 0 0.5rem 0;">Why LightGBM for Loan Risk?</h4>
+            <p>Loan assessment requires a balance of <strong>interpretability</strong> and <strong>high
+                precision</strong>. LightGBM excels at capturing non-linear relationships between financial variables
+              (like the interaction between DTI ratio and Credit History) that traditional linear models often miss.</p>
+          </div>
+        </div>
+
+        <div class="mid-row" style="margin-top:1.5rem">
+          <div class="card glass">
+            <div class="card-head">
+              <div class="card-head-left">
+                <div class="c-title">📊 Training Dynamics</div>
+              </div>
+            </div>
+            <div class="card-body" style="font-size:0.85rem; color:var(--t2);">
+              <p>The model was trained on a comprehensive historical dataset of loan outcomes, optimized using
+                <strong>Binary Log-Loss</strong> as the objective function. This ensures that the probability scores
+                produced are calibrated to represent realistic default risks.</p>
+              <div
+                style="margin-top:1rem; padding:1rem; background:var(--surface-2); border-radius:var(--r); border:1px solid var(--border);">
+                <code style="color:var(--purple); display:block; margin-bottom:0.5rem;">Objective: binary</code>
+                <code
+                  style="color:var(--purple); display:block; margin-bottom:0.5rem;">Metric: auc, binary_logloss</code>
+                <code
+                  style="color:var(--purple); display:block;">Boosting: gbdt (Gradient Boosting Decision Tree)</code>
+              </div>
+            </div>
+          </div>
+
+          <div class="card glass">
+            <div class="card-head">
+              <div class="card-head-left">
+                <div class="c-title">📜 Fairness & Ethics</div>
+              </div>
+            </div>
+            <div class="card-body" style="font-size:0.85rem; color:var(--t2);">
+              <p>RiskIQ implements strict feature filtering to ensure ethical AI practices. We prioritize
+                <strong>financial behavior</strong> over demographic factors to minimize bias in automated credit
+                decision-making.</p>
+              <p style="margin-top:0.5rem; font-style:italic; color:var(--t3);">Note: This model is for decision support
+                and should be used alongside human expertise.</p>
+            </div>
+          </div>
+        </div>
       </section>
 
     </main>

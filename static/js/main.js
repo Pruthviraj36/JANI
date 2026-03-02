@@ -8,7 +8,7 @@
   };
 
   // ── CONSTANTS & STATE ──────────────────────────────────────────
-  const PAGES = ['dashboard', 'portfolio', 'analysis', 'reports', 'model'];
+  const PAGES = ['dashboard', 'portfolio', 'analysis', 'reports', 'model', 'about'];
   let currentState = {
     modelInfo: null,
     history: [],
@@ -60,7 +60,8 @@
       portfolio: 'Loan Portfolio History',
       analysis: 'Risk Analysis Engine',
       reports: 'Session Performance Reports',
-      model: 'Model Specifications'
+      model: 'Model Specifications',
+      about: 'About AI Model'
     };
     pageTitle.textContent = titles[pageId] || 'RiskIQ Pro';
 
