@@ -3,6 +3,9 @@ from flask import Flask, render_template, request, jsonify
 import joblib
 import pandas as pd
 from datetime import datetime
+import requests
+import zipfile
+import io
 
 app = Flask(__name__)
 
@@ -11,6 +14,9 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent
 MODEL_PATH = BASE_DIR / 'models' / 'perfect_gpu_model.pkl'
+
+# External URL for model download (if file is missing or LFS pointer)
+MODEL_URL = os.environ.get('MODEL_URL') 
 
 import lightgbm
 import sklearn
@@ -30,25 +36,42 @@ def init_model():
         print(f"🔍 [Diagnostic] Base directory: {BASE_DIR}")
         print(f"🔍 [Diagnostic] Model path: {MODEL_PATH}")
         
+        # Checking for Git LFS pointer or missing file
+        should_download = False
         if not MODEL_PATH.exists():
-            load_error = f"Model file NOT FOUND at {MODEL_PATH}"
-            print(f"❌ [Error] {load_error}")
-            # List contents to see where we are
-            print(f"🔍 [Diagnostic] Base dir contents: {list(BASE_DIR.iterdir())}")
-            if (BASE_DIR / 'models').exists():
-                 print(f"🔍 [Diagnostic] Models dir contents: {list((BASE_DIR / 'models').iterdir())}")
-            return
-
-        print(f"✅ [Diagnostic] Model file found. Size: {MODEL_PATH.stat().st_size} bytes")
-        
-        # Checking for Git LFS pointer (if file is unusually small)
-        if MODEL_PATH.stat().st_size < 1000:
+            print(f"⚠️ Model file NOT FOUND at {MODEL_PATH}")
+            should_download = True
+        elif MODEL_PATH.stat().st_size < 1000:
             with open(MODEL_PATH, 'r') as f:
                 content = f.read(100)
                 if "version https://git-lfs.github.com" in content:
-                    load_error = "Git LFS pointer detected! The actual model file was not downloaded. Ensure Git LFS is enabled on Render."
-                    print(f"❌ [Error] {load_error}")
-                    return
+                    print("⚠️ Git LFS pointer detected instead of actual model.")
+                    should_download = True
+        
+        if should_download and MODEL_URL:
+            print(f"📡 Attempting to download model from {MODEL_URL}...")
+            MODEL_PATH.parent.mkdir(parents=True, exist_ok=True)
+            response = requests.get(MODEL_URL, stream=True)
+            if response.status_code == 200:
+                # Check if the URL points to a zip file
+                if MODEL_URL.lower().endswith('.zip'):
+                    print("📦 Detected ZIP file. Extracting...")
+                    z = zipfile.ZipFile(io.BytesIO(response.content))
+                    z.extractall(MODEL_PATH.parent)
+                    print(f"✅ Extraction complete.")
+                else:
+                    with open(MODEL_PATH, 'wb') as f:
+                        for chunk in response.iter_content(chunk_size=8192):
+                            f.write(chunk)
+                print(f"✅ Model ready. Size: {MODEL_PATH.stat().st_size if MODEL_PATH.exists() else 'Unknown'} bytes")
+            else:
+                load_error = f"Failed to download model. HTTP {response.status_code}"
+                print(f"❌ {load_error}")
+                return
+        elif should_download and not MODEL_URL:
+            load_error = "Model missing and no MODEL_URL provided in Environment Variables."
+            print(f"❌ {load_error}")
+            return
 
         try:
             bundle = joblib.load(MODEL_PATH)
