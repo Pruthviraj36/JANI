@@ -7,6 +7,70 @@
     return false;
   };
 
+  // ── 3D SPACE BACKGROUND (THREE.JS) ───────────────────────────
+  function initSpaceBackground() {
+    const canvas = document.getElementById('space-bg');
+    if (!canvas) return;
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(window.devicePixelRatio);
+
+    // Stars
+    const starGeometry = new THREE.BufferGeometry();
+    const starMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 0.7 });
+    const starVertices = [];
+    for (let i = 0; i < 15000; i++) {
+      const x = (Math.random() - 0.5) * 2000;
+      const y = (Math.random() - 0.5) * 2000;
+      const z = -Math.random() * 2000;
+      starVertices.push(x, y, z);
+    }
+    starGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starVertices, 3));
+    const stars = new THREE.Points(starGeometry, starMaterial);
+    scene.add(stars);
+
+    // Galaxy/Nebula effect (simplified)
+    const galaxyGeometry = new THREE.BufferGeometry();
+    const galaxyVertices = [];
+    const galaxyColors = [];
+    for (let i = 0; i < 2000; i++) {
+      const x = (Math.random() - 0.5) * 1000;
+      const y = (Math.random() - 0.5) * 1000;
+      const z = -Math.random() * 1000;
+      galaxyVertices.push(x, y, z);
+      galaxyColors.push(0.3, 0.5, 1); // Blueish
+    }
+    galaxyGeometry.setAttribute('position', new THREE.Float32BufferAttribute(galaxyVertices, 3));
+    galaxyGeometry.setAttribute('color', new THREE.Float32BufferAttribute(galaxyColors, 3));
+    const galaxyMaterial = new THREE.PointsMaterial({ vertexColors: true, size: 2, transparent: true, opacity: 0.5 });
+    const galaxy = new THREE.Points(galaxyGeometry, galaxyMaterial);
+    scene.add(galaxy);
+
+    camera.position.z = 1;
+
+    function animate() {
+      requestAnimationFrame(animate);
+      stars.rotation.y += 0.0002;
+      stars.rotation.x += 0.0001;
+      galaxy.rotation.y -= 0.0001;
+      renderer.render(scene, camera);
+    }
+
+    animate();
+
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+  }
+
+  // Initialize on load
+  document.addEventListener('DOMContentLoaded', initSpaceBackground);
+
   // ── CONSTANTS & STATE ──────────────────────────────────────────
   const PAGES = [
     "dashboard",
@@ -212,11 +276,11 @@
           <td>
             <div style="display:flex;align-items:center;gap:.6rem">
               <div class="tb-avatar" style="width:24px;height:24px;font-size:.6rem">${(
-                r.FullName || "User"
-              )
-                .split(" ")
-                .map((n) => n[0])
-                .join("")}</div>
+              r.FullName || "User"
+            )
+              .split(" ")
+              .map((n) => n[0])
+              .join("")}</div>
               <span style="font-weight:600;font-size:.85rem">${r.FullName || "Unknown"}</span>
             </div>
           </td>

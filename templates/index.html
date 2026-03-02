@@ -12,6 +12,9 @@
 </head>
 
 <body>
+  <!-- ══ 3D SPACE BACKGROUND ══ -->
+  <canvas id="space-bg"></canvas>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <div class="shell">
 
     <!-- ══ SIDEBAR ══ -->
@@ -78,7 +81,7 @@
       <section id="page-dashboard">
 
         <div class="kpi-row">
-          <div class="kpi-card k-blue">
+          <div class="kpi-card k-blue glass">
             <div class="kpi-top">
               <span class="kpi-label">Total Assessments</span>
               <span class="kpi-delta pos" id="kpi-total-delta">Live</span>
@@ -86,7 +89,7 @@
             <div class="kpi-val" id="kpi-total">0</div>
             <div class="kpi-bar" style="width:72%"></div>
           </div>
-          <div class="kpi-card k-red">
+          <div class="kpi-card k-red glass">
             <div class="kpi-top">
               <span class="kpi-label">Default Rate</span>
               <span class="kpi-delta neg" id="kpi-rate-delta">—</span>
@@ -642,7 +645,8 @@
             <div class="card-body" style="font-size:0.85rem; color:var(--t2);">
               <p>The model was trained on a comprehensive historical dataset of loan outcomes, optimized using
                 <strong>Binary Log-Loss</strong> as the objective function. This ensures that the probability scores
-                produced are calibrated to represent realistic default risks.</p>
+                produced are calibrated to represent realistic default risks.
+              </p>
               <div
                 style="margin-top:1rem; padding:1rem; background:var(--surface-2); border-radius:var(--r); border:1px solid var(--border);">
                 <code style="color:var(--purple); display:block; margin-bottom:0.5rem;">Objective: binary</code>
@@ -663,7 +667,8 @@
             <div class="card-body" style="font-size:0.85rem; color:var(--t2);">
               <p>RiskIQ implements strict feature filtering to ensure ethical AI practices. We prioritize
                 <strong>financial behavior</strong> over demographic factors to minimize bias in automated credit
-                decision-making.</p>
+                decision-making.
+              </p>
               <p style="margin-top:0.5rem; font-style:italic; color:var(--t3);">Note: This model is for decision support
                 and should be used alongside human expertise.</p>
             </div>

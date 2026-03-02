@@ -7,9 +7,10 @@ from datetime import datetime
 app = Flask(__name__)
 
 # ── Load model bundle ────────────────────────────────────────────
-# Use a more reliable path resolution method
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-MODEL_PATH = os.path.join(BASE_DIR, 'models', 'perfect_gpu_model.pkl')
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent
+MODEL_PATH = BASE_DIR / 'models' / 'perfect_gpu_model.pkl'
 
 model = None
 encoders = {}
@@ -25,14 +26,15 @@ def init_model():
         print(f"🔍 [Diagnostic] Model path: {MODEL_PATH}")
         
         # Detailed directory contents for debugging
-        print(f"🔍 [Diagnostic] Base dir contents: {os.listdir(BASE_DIR)}")
-        if os.path.exists(os.path.join(BASE_DIR, 'models')):
-            print(f"🔍 [Diagnostic] Models dir contents: {os.listdir(os.path.join(BASE_DIR, 'models'))}")
+        print(f"🔍 [Diagnostic] Base dir contents: {list(BASE_DIR.iterdir())}")
+        models_dir = BASE_DIR / 'models'
+        if models_dir.exists() and models_dir.is_dir():
+            print(f"🔍 [Diagnostic] Models dir contents: {list(models_dir.iterdir())}")
         else:
             print(f"🔍 [Diagnostic] Models directory does NOT exist")
         
-        if os.path.exists(MODEL_PATH):
-            print(f"✅ [Diagnostic] Model file exists. Size: {os.path.getsize(MODEL_PATH)} bytes")
+        if MODEL_PATH.exists():
+            print(f"✅ [Diagnostic] Model file exists. Size: {MODEL_PATH.stat().st_size} bytes")
             bundle = joblib.load(MODEL_PATH)
             model = bundle['model']
             encoders = bundle['encoders']
@@ -211,8 +213,9 @@ def health():
         'model_loaded': model is not None,
         'features_count': len(features) if model else 0,
         'error': load_error if load_error else None,
-        'search_path': MODEL_PATH,
-        'cwd': os.getcwd()
+        'search_path': str(MODEL_PATH),
+        'cwd': os.getcwd(),
+        'base_dir': str(BASE_DIR)
     })
 
 
