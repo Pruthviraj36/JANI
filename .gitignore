@@ -1,8 +1,8 @@
 venv/
-venv312/
+.venv/
 __pycache__/
 *.pyc
 *.pyo
 .env
 *.log
-main.py
+.DS_Store
