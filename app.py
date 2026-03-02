@@ -7,6 +7,7 @@ from datetime import datetime
 app = Flask(__name__)
 
 # ── Load model bundle ────────────────────────────────────────────
+# Use a more reliable path resolution method
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 MODEL_PATH = os.path.join(BASE_DIR, 'models', 'perfect_gpu_model.pkl')
 
@@ -19,26 +20,34 @@ load_error = None
 def init_model():
     global model, encoders, features, params, load_error
     try:
-        print(f"🔍 [Diagnostic] CWD: {os.getcwd()}")
-        print(f"🔍 [Diagnostic] Attempting to load model from: {MODEL_PATH}")
+        print(f"🔍 [Diagnostic] Current working directory: {os.getcwd()}")
+        print(f"🔍 [Diagnostic] Base directory: {BASE_DIR}")
+        print(f"🔍 [Diagnostic] Model path: {MODEL_PATH}")
+        
+        # Detailed directory contents for debugging
+        print(f"🔍 [Diagnostic] Base dir contents: {os.listdir(BASE_DIR)}")
+        if os.path.exists(os.path.join(BASE_DIR, 'models')):
+            print(f"🔍 [Diagnostic] Models dir contents: {os.listdir(os.path.join(BASE_DIR, 'models'))}")
+        else:
+            print(f"🔍 [Diagnostic] Models directory does NOT exist")
         
         if os.path.exists(MODEL_PATH):
-            import joblib
+            print(f"✅ [Diagnostic] Model file exists. Size: {os.path.getsize(MODEL_PATH)} bytes")
             bundle = joblib.load(MODEL_PATH)
             model = bundle['model']
             encoders = bundle['encoders']
             features = bundle['features']
             params = bundle.get('params', {})
-            print(f'✅ [Success] Model loaded. Features: {len(features)}')
+            print(f'✅ [Success] Model loaded. Features: {len(features)}, Encoders: {len(encoders)}, Model type: {type(model)}')
             load_error = None
         else:
-            load_error = f"File not found at {MODEL_PATH}. Current items in JANI: {os.listdir(BASE_DIR)}"
+            load_error = f"File not found at {MODEL_PATH}"
             print(f'❌ [Error] {load_error}')
     except Exception as e:
         import traceback
         load_error = str(e)
         print(f'❌ [Critical] Model failed to load: {e}')
-        traceback.print_exc()
+        print(f'❌ [Critical] Stack trace: {traceback.format_exc()}')
 
 init_model()
 
