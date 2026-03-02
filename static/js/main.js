@@ -465,7 +465,12 @@
         });
         const r = await res.json();
         if (r.error) {
-          showErr(r.error);
+          // Check if it's a model loading error and suggest checking health
+          let msg = r.error;
+          if (res.status === 503) {
+            msg += " <br><small>Tip: Visit <a href='/api/health' target='_blank' style='color:var(--primary)'>/api/health</a> for technical diagnostics.</small>";
+          }
+          showErr(msg);
           return;
         }
         renderResult(r, data);
@@ -582,7 +587,7 @@
     btn.disabled = on;
   }
   function showErr(msg) {
-    errTxt.textContent = msg;
+    errTxt.innerHTML = msg;
     errBox.classList.add("on");
     errBox.style.animation = "fadeInUp 0.3s var(--ease)";
   }

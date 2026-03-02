@@ -12,11 +12,16 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent
 MODEL_PATH = BASE_DIR / 'models' / 'perfect_gpu_model.pkl'
 
+import lightgbm
+import sklearn
+import traceback
+
 model = None
 encoders = {}
 features = []
 params = {}
 load_error = None
+load_traceback = None
 
 def init_model():
     global model, encoders, features, params, load_error
@@ -25,31 +30,47 @@ def init_model():
         print(f"🔍 [Diagnostic] Base directory: {BASE_DIR}")
         print(f"🔍 [Diagnostic] Model path: {MODEL_PATH}")
         
-        # Detailed directory contents for debugging
-        print(f"🔍 [Diagnostic] Base dir contents: {list(BASE_DIR.iterdir())}")
-        models_dir = BASE_DIR / 'models'
-        if models_dir.exists() and models_dir.is_dir():
-            print(f"🔍 [Diagnostic] Models dir contents: {list(models_dir.iterdir())}")
-        else:
-            print(f"🔍 [Diagnostic] Models directory does NOT exist")
+        if not MODEL_PATH.exists():
+            load_error = f"Model file NOT FOUND at {MODEL_PATH}"
+            print(f"❌ [Error] {load_error}")
+            # List contents to see where we are
+            print(f"🔍 [Diagnostic] Base dir contents: {list(BASE_DIR.iterdir())}")
+            if (BASE_DIR / 'models').exists():
+                 print(f"🔍 [Diagnostic] Models dir contents: {list((BASE_DIR / 'models').iterdir())}")
+            return
+
+        print(f"✅ [Diagnostic] Model file found. Size: {MODEL_PATH.stat().st_size} bytes")
         
-        if MODEL_PATH.exists():
-            print(f"✅ [Diagnostic] Model file exists. Size: {MODEL_PATH.stat().st_size} bytes")
+        # Checking for Git LFS pointer (if file is unusually small)
+        if MODEL_PATH.stat().st_size < 1000:
+            with open(MODEL_PATH, 'r') as f:
+                content = f.read(100)
+                if "version https://git-lfs.github.com" in content:
+                    load_error = "Git LFS pointer detected! The actual model file was not downloaded. Ensure Git LFS is enabled on Render."
+                    print(f"❌ [Error] {load_error}")
+                    return
+
+        try:
             bundle = joblib.load(MODEL_PATH)
             model = bundle['model']
             encoders = bundle['encoders']
             features = bundle['features']
             params = bundle.get('params', {})
-            print(f'✅ [Success] Model loaded. Features: {len(features)}, Encoders: {len(encoders)}, Model type: {type(model)}')
+            print(f'✅ [Success] Model loaded successfully.')
             load_error = None
-        else:
-            load_error = f"File not found at {MODEL_PATH}"
-            print(f'❌ [Error] {load_error}')
+        except Exception as e:
+            import traceback
+            load_error = f"Model loading failed: {str(e)}"
+            load_traceback = traceback.format_exc()
+            print(f"❌ [Error] {load_error}")
+            print(f"❌ [Stack Trace] {load_traceback}")
+
     except Exception as e:
         import traceback
-        load_error = str(e)
-        print(f'❌ [Critical] Model failed to load: {e}')
-        print(f'❌ [Critical] Stack trace: {traceback.format_exc()}')
+        load_error = f"Critical error in init_model: {str(e)}"
+        load_traceback = traceback.format_exc()
+        print(f'❌ [Critical] {load_error}')
+        print(f'❌ [Stack Trace] {load_traceback}')
 
 init_model()
 
@@ -212,10 +233,17 @@ def health():
         'status': 'healthy' if model else 'degraded',
         'model_loaded': model is not None,
         'features_count': len(features) if model else 0,
-        'error': load_error if load_error else None,
+        'error': load_error,
+        'traceback': load_traceback,
         'search_path': str(MODEL_PATH),
         'cwd': os.getcwd(),
-        'base_dir': str(BASE_DIR)
+        'base_dir': str(BASE_DIR),
+        'versions': {
+            'lightgbm': lightgbm.__version__,
+            'scikit-learn': sklearn.__version__,
+            'joblib': joblib.__version__,
+            'pandas': pd.__version__
+        }
     })
 
 
