@@ -25,9 +25,9 @@
   --purple: #a78bfa;
 
   --t1: #ffffff;
-  --t2: #cbd5e1;
-  --t3: #94a3b8;
-  --t4: #64748b;
+  --t2: #e2e8f0;
+  --t3: #cbd5e1;
+  --t4: #94a3b8;
 
   --r: 8px;
   --r-md: 12px;
@@ -358,6 +358,12 @@ textarea {
   flex-direction: column;
   gap: 1.5rem;
   overflow-y: auto;
+}
+
+.main section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
 /* ═══════════════════════════════════════

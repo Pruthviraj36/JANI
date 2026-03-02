@@ -158,7 +158,7 @@
             </div>
           </td>
           <td style="font-size:.75rem;color:var(--t2)">${r.LoanPurpose || 'Other'}</td>
-          <td style="font-family:'JetBrains Mono';font-size:.8rem">$${(+r.LoanAmount || 0).toLocaleString()}</td>
+          <td style="font-family:'JetBrains Mono';font-size:.8rem">₹${(+r.LoanAmount || 0).toLocaleString()}</td>
           <td><span class="vbadge ${r.prediction === 1 ? 'hi' : 'lo'}">${r.label || 'N/A'}</span></td>
           <td><button class="pill-btn" onclick="navigate('portfolio')" style="padding:.2rem .5rem;font-size:.6rem">Details</button></td>
         </tr>
@@ -179,8 +179,8 @@
           <td><strong style="font-family:'JetBrains Mono';font-size:.7rem">${r.id || 'N/A'}</strong></td>
           <td><span style="font-weight:600">${r.FullName || 'Unknown'}</span></td>
           <td style="color:var(--t3);font-size:.7rem">${r.timestamp || ''}</td>
-          <td>$${(+r.Income || 0).toLocaleString()}</td>
-          <td>$${(+r.LoanAmount || 0).toLocaleString()}</td>
+          <td>₹${(+r.Income || 0).toLocaleString()}</td>
+          <td>₹${(+r.LoanAmount || 0).toLocaleString()}</td>
           <td>${r.CreditScore || 0}</td>
           <td>${r.DTIRatio || 0}</td>
           <td>${r.LoanPurpose || 'Other'}</td>

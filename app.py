@@ -7,12 +7,26 @@ from datetime import datetime
 app = Flask(__name__)
 
 # ── Load model bundle ────────────────────────────────────────────
-bundle   = joblib.load('perfect_gpu_model.pkl')
-model    = bundle['model']
-encoders = bundle['encoders']
-features = bundle['features']
-params   = bundle.get('params', {})
-print(f'✅ Model loaded. Features: {features}')
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+MODEL_PATH = os.path.join(BASE_DIR, 'models', 'perfect_gpu_model.pkl')
+
+model = None
+encoders = {}
+features = []
+params = {}
+
+try:
+    if os.path.exists(MODEL_PATH):
+        bundle = joblib.load(MODEL_PATH)
+        model = bundle['model']
+        encoders = bundle['encoders']
+        features = bundle['features']
+        params = bundle.get('params', {})
+        print(f'✅ Model successfully loaded from {MODEL_PATH}. Features: {len(features)}')
+    else:
+        print(f'❌ CRITICAL: Model file not found at {MODEL_PATH}')
+except Exception as e:
+    print(f'❌ CRITICAL: Model failed to load: {e}')
 
 # ── In-memory prediction history ─────────────────────────────────
 prediction_history = []
@@ -48,6 +62,12 @@ def index():
 
 @app.route('/predict', methods=['POST'])
 def predict():
+    if model is None:
+        return jsonify({
+            'error': 'Model not loaded on server. Check Render logs for path or memory errors.',
+            'status': 'fail'
+        }), 503
+
     try:
         data = request.get_json(force=True)
         full_name = data.get('FullName', 'Unknown Borrower')
@@ -102,6 +122,9 @@ def predict():
         return jsonify(result)
 
     except Exception as e:
+        print(f"❌ Prediction Error: {e}")
+        import traceback
+        traceback.print_exc()
         return jsonify({'error': str(e)}), 400
 
 
@@ -155,6 +178,16 @@ def model_info():
 def history():
     """Return prediction history for Loan Portfolio page."""
     return jsonify(list(reversed(prediction_history)))
+
+
+@app.route('/api/health')
+def health():
+    """Server and Model Health Check."""
+    return jsonify({
+        'status': 'healthy',
+        'model_loaded': model is not None,
+        'features_count': len(features) if model else 0
+    })
 
 
 @app.route('/api/stats')
