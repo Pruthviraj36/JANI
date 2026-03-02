@@ -1,6 +1,12 @@
 (() => {
   'use strict';
 
+  // Global Error Handler for better debugging
+  window.onerror = function (msg, url, line) {
+    console.error("RiskIQ Debug:", msg, "at", url, ":", line);
+    return false;
+  };
+
   // ── CONSTANTS & STATE ──────────────────────────────────────────
   const PAGES = ['dashboard', 'portfolio', 'analysis', 'reports', 'model'];
   let currentState = {
@@ -109,18 +115,23 @@
     await refreshModelInfo();
 
     // KPI Cards
-    document.getElementById('kpi-total').textContent = currentState.stats.total.toLocaleString();
-    document.getElementById('kpi-rate').textContent = currentState.stats.default_rate + '%';
-    document.getElementById('kpi-conf').textContent = currentState.stats.avg_confidence + '%';
+    const kTotal = document.getElementById('kpi-total');
+    const kRate = document.getElementById('kpi-rate');
+    const kConf = document.getElementById('kpi-conf');
+    if (kTotal) kTotal.textContent = (currentState.stats.total || 0).toLocaleString();
+    if (kRate) kRate.textContent = (currentState.stats.default_rate || 0) + '%';
+    if (kConf) kConf.textContent = (currentState.stats.avg_confidence || 0) + '%';
 
     // Bars
     const total = currentState.stats.total || 1;
-    document.getElementById('bar-low-risk').style.height = (currentState.stats.low_risk / total * 100) + 'px';
-    document.getElementById('bar-high-risk').style.height = (currentState.stats.high_risk / total * 100) + 'px';
+    const bLow = document.getElementById('bar-low-risk');
+    const bHigh = document.getElementById('bar-high-risk');
+    if (bLow) bLow.style.height = (currentState.stats.low_risk / total * 100) + 'px';
+    if (bHigh) bHigh.style.height = (currentState.stats.high_risk / total * 100) + 'px';
 
     // Top Drivers (from model info)
     const driversBox = document.getElementById('top-drivers');
-    if (currentState.modelInfo) {
+    if (driversBox && currentState.modelInfo) {
       const top3 = currentState.modelInfo.feature_importance.slice(0, 3);
       driversBox.innerHTML = top3.map(f => `
         <div class="risk-driver-row">
@@ -136,19 +147,19 @@
 
     // Recent Table
     const tbody = document.getElementById('recent-tbody');
-    const recent = currentState.history.slice(0, 5);
-    if (recent.length) {
+    if (tbody && currentState.history && currentState.history.length) {
+      const recent = currentState.history.slice(0, 5);
       tbody.innerHTML = recent.map(r => `
         <tr>
           <td>
             <div style="display:flex;align-items:center;gap:.6rem">
-              <div class="tb-avatar" style="width:24px;height:24px;font-size:.6rem">${r.FullName.split(' ').map(n => n[0]).join('')}</div>
-              <span style="font-weight:600;font-size:.85rem">${r.FullName}</span>
+              <div class="tb-avatar" style="width:24px;height:24px;font-size:.6rem">${((r.FullName || 'User').split(' ').map(n => n[0]).join(''))}</div>
+              <span style="font-weight:600;font-size:.85rem">${r.FullName || 'Unknown'}</span>
             </div>
           </td>
-          <td style="font-size:.75rem;color:var(--t2)">${r.LoanPurpose}</td>
-          <td style="font-family:'JetBrains Mono';font-size:.8rem">$${(+r.LoanAmount).toLocaleString()}</td>
-          <td><span class="vbadge ${r.prediction === 1 ? 'hi' : 'lo'}">${r.label}</span></td>
+          <td style="font-size:.75rem;color:var(--t2)">${r.LoanPurpose || 'Other'}</td>
+          <td style="font-family:'JetBrains Mono';font-size:.8rem">$${(+r.LoanAmount || 0).toLocaleString()}</td>
+          <td><span class="vbadge ${r.prediction === 1 ? 'hi' : 'lo'}">${r.label || 'N/A'}</span></td>
           <td><button class="pill-btn" onclick="navigate('portfolio')" style="padding:.2rem .5rem;font-size:.6rem">Details</button></td>
         </tr>
       `).join('');
@@ -162,18 +173,18 @@
     document.getElementById('port-high').textContent = currentState.stats.high_risk;
 
     const tbody = document.getElementById('port-tbody');
-    if (currentState.history.length) {
+    if (tbody && currentState.history && currentState.history.length) {
       tbody.innerHTML = currentState.history.map(r => `
         <tr>
-          <td><strong style="font-family:'JetBrains Mono';font-size:.7rem">${r.id}</strong></td>
-          <td><span style="font-weight:600">${r.FullName}</span></td>
-          <td style="color:var(--t3);font-size:.7rem">${r.timestamp}</td>
-          <td>$${(+r.Income).toLocaleString()}</td>
-          <td>$${(+r.LoanAmount).toLocaleString()}</td>
-          <td>${r.CreditScore}</td>
-          <td>${r.DTIRatio}</td>
-          <td>${r.LoanPurpose}</td>
-          <td><span class="vbadge ${r.prediction === 1 ? 'hi' : 'lo'}">${r.label}</span></td>
+          <td><strong style="font-family:'JetBrains Mono';font-size:.7rem">${r.id || 'N/A'}</strong></td>
+          <td><span style="font-weight:600">${r.FullName || 'Unknown'}</span></td>
+          <td style="color:var(--t3);font-size:.7rem">${r.timestamp || ''}</td>
+          <td>$${(+r.Income || 0).toLocaleString()}</td>
+          <td>$${(+r.LoanAmount || 0).toLocaleString()}</td>
+          <td>${r.CreditScore || 0}</td>
+          <td>${r.DTIRatio || 0}</td>
+          <td>${r.LoanPurpose || 'Other'}</td>
+          <td><span class="vbadge ${r.prediction === 1 ? 'hi' : 'lo'}">${r.label || 'N/A'}</span></td>
         </tr>
       `).join('');
     }
@@ -335,7 +346,11 @@
     requestAnimationFrame(tick);
   }
 
-  // Init
-  navigate('dashboard');
+  // Init when DOM is actually ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => navigate('dashboard'));
+  } else {
+    navigate('dashboard');
+  }
 
 })();

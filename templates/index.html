@@ -359,214 +359,211 @@
           </button>
           <div class="err" id="err"><span>⚠</span><span id="err-t"></span></div>
         </form>
-  </div>
 
-  <!-- Result Panel -->
-  <div class="res-sticky">
-    <div class="idle" id="idle">
-      <div class="idle-ic">△</div>
-      <h3>Awaiting Analysis</h3>
-      <p>Fill in the applicant details and run the analysis to see the risk score.</p>
-    </div>
-    <div class="rc" id="rc">
-      <div class="rc-stripe"></div>
-      <div class="rc-hero">
-        <div class="rc-donut">
-          <svg viewBox="0 0 80 80">
-            <circle class="d-bg" cx="40" cy="40" r="35" />
-            <circle class="d-fg" id="d-fg" cx="40" cy="40" r="35" />
-          </svg>
-          <div class="d-center">
-            <div class="d-pct" id="d-pct">0%</div>
-            <div class="d-lbl">Risk</div>
+        <!-- Result Panel -->
+        <div class="res-sticky">
+          <div class="idle" id="idle">
+            <div class="idle-ic">△</div>
+            <h3>Awaiting Analysis</h3>
+            <p>Fill in the applicant details and run the analysis to see the risk score.</p>
           </div>
-        </div>
-        <div class="rc-info">
-          <div class="rc-pill" id="rc-pill"></div>
-          <div class="rc-verdict" id="rc-verdict"></div>
-          <div class="rc-conf">Confidence: <strong id="rc-conf"></strong></div>
-        </div>
-      </div>
-      <div class="rc-probs">
-        <div class="pb">
-          <div class="pb-top">
-            <span class="pb-name"><span class="pb-dot g"></span>Low Risk</span>
-            <span class="pb-val" id="pv-low">—</span>
-          </div>
-          <div class="pb-track">
-            <div class="pb-bar g" id="pb-low" style="width:0%"></div>
-          </div>
-        </div>
-        <div class="pb">
-          <div class="pb-top">
-            <span class="pb-name"><span class="pb-dot r"></span>High Risk</span>
-            <span class="pb-val" id="pv-high">—</span>
-          </div>
-          <div class="pb-track">
-            <div class="pb-bar r" id="pb-high" style="width:0%"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="sig-card" id="sc">
-      <div class="sig-head">Key Risk Signals</div>
-      <div class="sig-body" id="sb"></div>
-    </div>
-  </div>
-  </div>
-  </section>
-
-  <!-- ════════════════════════════════════
-         PAGE: REPORTS
-    ═════════════════════════════════════ -->
-  <section id="page-reports" style="display:none">
-
-    <div style="margin-bottom:1.25rem">
-      <div class="eyebrow">≡ Reports</div>
-      <div style="font-size:1.3rem;font-weight:800;letter-spacing:-.03em">Session Summary</div>
-      <div style="font-size:.8rem;color:var(--t3);margin-top:.3rem">Aggregated statistics from this session's
-        assessments</div>
-    </div>
-
-    <div class="kpi-row" style="margin-bottom:1.25rem">
-      <div class="kpi-card k-blue">
-        <div class="kpi-top"><span class="kpi-label">Total Assessed</span></div>
-        <div class="kpi-val" id="rep-total">0</div>
-        <div class="kpi-bar"></div>
-      </div>
-      <div class="kpi-card k-green">
-        <div class="kpi-top"><span class="kpi-label">Low Risk</span></div>
-        <div class="kpi-val" id="rep-low">0</div>
-        <div class="kpi-bar"></div>
-      </div>
-      <div class="kpi-card k-red">
-        <div class="kpi-top"><span class="kpi-label">High Risk</span></div>
-        <div class="kpi-val" id="rep-high">0</div>
-        <div class="kpi-bar"></div>
-      </div>
-    </div>
-
-    <div class="mid-row">
-      <div class="card">
-        <div class="card-head">
-          <div class="card-head-left">
-            <div class="c-title">Risk Breakdown</div>
-          </div>
-        </div>
-        <div class="card-body">
-          <div style="display:flex;align-items:center;gap:1.5rem;margin-bottom:1rem">
-            <div style="width:120px;height:120px;position:relative" id="rep-donut-wrap">
-              <svg viewBox="0 0 80 80" width="120" height="120" style="transform:rotate(-90deg)">
-                <circle fill="none" stroke="var(--surface-3)" stroke-width="10" cx="40" cy="40" r="35" />
-                <circle id="rep-donut-fg" fill="none" stroke="var(--red)" stroke-width="10" stroke-linecap="round"
-                  cx="40" cy="40" r="35"
-                  style="stroke-dasharray:220;stroke-dashoffset:220;transition:stroke-dashoffset 1s" />
-              </svg>
-              <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center">
-                <span id="rep-donut-pct"
-                  style="font-family:'JetBrains Mono',monospace;font-size:1rem;font-weight:700;color:var(--red)">0%</span>
+          <div class="rc" id="rc">
+            <div class="rc-stripe"></div>
+            <div class="rc-hero">
+              <div class="rc-donut">
+                <svg viewBox="0 0 80 80">
+                  <circle class="d-bg" cx="40" cy="40" r="35" />
+                  <circle class="d-fg" id="d-fg" cx="40" cy="40" r="35" />
+                </svg>
+                <div class="d-center">
+                  <div class="d-pct" id="d-pct">0%</div>
+                  <div class="d-lbl">Risk</div>
+                </div>
+              </div>
+              <div class="rc-info">
+                <div class="rc-pill" id="rc-pill"></div>
+                <div class="rc-verdict" id="rc-verdict"></div>
+                <div class="rc-conf">Confidence: <strong id="rc-conf"></strong></div>
               </div>
             </div>
-            <div>
-              <div style="font-size:.72rem;color:var(--t3);margin-bottom:.3rem">Default rate this session</div>
-              <div id="rep-rate-big" style="font-size:2.2rem;font-weight:900;letter-spacing:-.04em;color:var(--t1)">
-                —</div>
+            <div class="rc-probs">
+              <div class="pb">
+                <div class="pb-top">
+                  <span class="pb-name"><span class="pb-dot g"></span>Low Risk</span>
+                  <span class="pb-val" id="pv-low">—</span>
+                </div>
+                <div class="pb-track">
+                  <div class="pb-bar g" id="pb-low" style="width:0%"></div>
+                </div>
+              </div>
+              <div class="pb">
+                <div class="pb-top">
+                  <span class="pb-name"><span class="pb-dot r"></span>High Risk</span>
+                  <span class="pb-val" id="pv-high">—</span>
+                </div>
+                <div class="pb-track">
+                  <div class="pb-bar r" id="pb-high" style="width:0%"></div>
+                </div>
+              </div>
             </div>
           </div>
-          <div class="rd-track" style="margin-top:.75rem">
-            <div id="rep-bar" class="rd-fill r" style="width:0%;transition:width 1s"></div>
+          <div class="sig-card" id="sc">
+            <div class="sig-head">Key Risk Signals</div>
+            <div class="sig-body" id="sb"></div>
           </div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-head">
-          <div class="card-head-left">
-            <div class="c-title">Avg Confidence</div>
-          </div>
-        </div>
-        <div class="card-body" style="display:flex;align-items:center;justify-content:center;min-height:180px">
-          <div style="text-align:center">
-            <div id="rep-conf-big"
-              style="font-family:'JetBrains Mono',monospace;font-size:3rem;font-weight:900;letter-spacing:-.04em;color:var(--blue)">
-              —</div>
-            <div style="font-size:.72rem;color:var(--t3);margin-top:.5rem">Average model confidence</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+      </section>
 
-  <!-- ════════════════════════════════════
+      <!-- ════════════════════════════════════
+         PAGE: REPORTS
+    ═════════════════════════════════════ -->
+      <section id="page-reports" style="display:none">
+
+        <div style="margin-bottom:1.25rem">
+          <div class="eyebrow">≡ Reports</div>
+          <div style="font-size:1.3rem;font-weight:800;letter-spacing:-.03em">Session Summary</div>
+          <div style="font-size:.8rem;color:var(--t3);margin-top:.3rem">Aggregated statistics from this session's
+            assessments</div>
+        </div>
+
+        <div class="kpi-row" style="margin-bottom:1.25rem">
+          <div class="kpi-card k-blue">
+            <div class="kpi-top"><span class="kpi-label">Total Assessed</span></div>
+            <div class="kpi-val" id="rep-total">0</div>
+            <div class="kpi-bar"></div>
+          </div>
+          <div class="kpi-card k-green">
+            <div class="kpi-top"><span class="kpi-label">Low Risk</span></div>
+            <div class="kpi-val" id="rep-low">0</div>
+            <div class="kpi-bar"></div>
+          </div>
+          <div class="kpi-card k-red">
+            <div class="kpi-top"><span class="kpi-label">High Risk</span></div>
+            <div class="kpi-val" id="rep-high">0</div>
+            <div class="kpi-bar"></div>
+          </div>
+        </div>
+
+        <div class="mid-row">
+          <div class="card">
+            <div class="card-head">
+              <div class="card-head-left">
+                <div class="c-title">Risk Breakdown</div>
+              </div>
+            </div>
+            <div class="card-body">
+              <div style="display:flex;align-items:center;gap:1.5rem;margin-bottom:1rem">
+                <div style="width:120px;height:120px;position:relative" id="rep-donut-wrap">
+                  <svg viewBox="0 0 80 80" width="120" height="120" style="transform:rotate(-90deg)">
+                    <circle fill="none" stroke="var(--surface-3)" stroke-width="10" cx="40" cy="40" r="35" />
+                    <circle id="rep-donut-fg" fill="none" stroke="var(--red)" stroke-width="10" stroke-linecap="round"
+                      cx="40" cy="40" r="35"
+                      style="stroke-dasharray:220;stroke-dashoffset:220;transition:stroke-dashoffset 1s" />
+                  </svg>
+                  <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center">
+                    <span id="rep-donut-pct"
+                      style="font-family:'JetBrains Mono',monospace;font-size:1rem;font-weight:700;color:var(--red)">0%</span>
+                  </div>
+                </div>
+                <div>
+                  <div style="font-size:.72rem;color:var(--t3);margin-bottom:.3rem">Default rate this session</div>
+                  <div id="rep-rate-big" style="font-size:2.2rem;font-weight:900;letter-spacing:-.04em;color:var(--t1)">
+                    —</div>
+                </div>
+              </div>
+              <div class="rd-track" style="margin-top:.75rem">
+                <div id="rep-bar" class="rd-fill r" style="width:0%;transition:width 1s"></div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-head">
+              <div class="card-head-left">
+                <div class="c-title">Avg Confidence</div>
+              </div>
+            </div>
+            <div class="card-body" style="display:flex;align-items:center;justify-content:center;min-height:180px">
+              <div style="text-align:center">
+                <div id="rep-conf-big"
+                  style="font-family:'JetBrains Mono',monospace;font-size:3rem;font-weight:900;letter-spacing:-.04em;color:var(--blue)">
+                  —</div>
+                <div style="font-size:.72rem;color:var(--t3);margin-top:.5rem">Average model confidence</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ════════════════════════════════════
          PAGE: MODEL SPECS
     ═════════════════════════════════════ -->
-  <section id="page-model" style="display:none">
+      <section id="page-model" style="display:none">
 
-    <div style="margin-bottom:1.25rem">
-      <div class="eyebrow">⚙ Model Specifications</div>
-      <div style="font-size:1.3rem;font-weight:800;letter-spacing:-.03em">LightGBM Model Details</div>
-      <div style="font-size:.8rem;color:var(--t3);margin-top:.3rem">Training configuration, hyperparameters, and
-        feature analysis</div>
-    </div>
-
-    <div class="mid-row" style="margin-bottom:1.25rem">
-
-      <!-- Model Info Card -->
-      <div class="card">
-        <div class="card-head">
-          <div class="card-head-left">
-            <div class="c-title">🤖 Model Configuration</div>
-          </div>
+        <div style="margin-bottom:1.25rem">
+          <div class="eyebrow">⚙ Model Specifications</div>
+          <div style="font-size:1.3rem;font-weight:800;letter-spacing:-.03em">LightGBM Model Details</div>
+          <div style="font-size:.8rem;color:var(--t3);margin-top:.3rem">Training configuration, hyperparameters, and
+            feature analysis</div>
         </div>
-        <div class="card-body">
-          <div class="spec-grid" id="spec-grid">
+
+        <div class="mid-row" style="margin-bottom:1.25rem">
+
+          <!-- Model Info Card -->
+          <div class="card">
+            <div class="card-head">
+              <div class="card-head-left">
+                <div class="c-title">🤖 Model Configuration</div>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="spec-grid" id="spec-grid">
+                <div style="color:var(--t3);font-size:.78rem">Loading…</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Encoder Classes -->
+          <div class="card">
+            <div class="card-head">
+              <div class="card-head-left">
+                <div class="c-title">🏷 Categorical Encodings</div>
+                <div class="c-sub">LabelEncoder classes per feature</div>
+              </div>
+            </div>
+            <div class="card-body" id="encoder-body" style="display:flex;flex-direction:column;gap:.75rem">
+              <div style="color:var(--t3);font-size:.78rem">Loading…</div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Feature Importance -->
+        <div class="card">
+          <div class="card-head">
+            <div class="card-head-left">
+              <div class="c-title">📊 Feature Importance (Gain)</div>
+              <div class="c-sub">Higher = more predictive power in the model</div>
+            </div>
+          </div>
+          <div class="card-body" id="feat-imp-body">
             <div style="color:var(--t3);font-size:.78rem">Loading…</div>
           </div>
         </div>
-      </div>
 
-      <!-- Encoder Classes -->
-      <div class="card">
-        <div class="card-head">
-          <div class="card-head-left">
-            <div class="c-title">🏷 Categorical Encodings</div>
-            <div class="c-sub">LabelEncoder classes per feature</div>
+        <!-- Features List -->
+        <div class="card" style="margin-top:1.25rem">
+          <div class="card-head">
+            <div class="card-head-left">
+              <div class="c-title">🗂 Features Used in Training</div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="feat-tags" id="feat-tags">Loading…</div>
           </div>
         </div>
-        <div class="card-body" id="encoder-body" style="display:flex;flex-direction:column;gap:.75rem">
-          <div style="color:var(--t3);font-size:.78rem">Loading…</div>
-        </div>
-      </div>
 
-    </div>
+      </section>
 
-    <!-- Feature Importance -->
-    <div class="card">
-      <div class="card-head">
-        <div class="card-head-left">
-          <div class="c-title">📊 Feature Importance (Gain)</div>
-          <div class="c-sub">Higher = more predictive power in the model</div>
-        </div>
-      </div>
-      <div class="card-body" id="feat-imp-body">
-        <div style="color:var(--t3);font-size:.78rem">Loading…</div>
-      </div>
-    </div>
-
-    <!-- Features List -->
-    <div class="card" style="margin-top:1.25rem">
-      <div class="card-head">
-        <div class="card-head-left">
-          <div class="c-title">🗂 Features Used in Training</div>
-        </div>
-      </div>
-      <div class="card-body">
-        <div class="feat-tags" id="feat-tags">Loading…</div>
-      </div>
-    </div>
-
-  </section>
-
-  </main>
+    </main>
   </div>
 
   <script src="{{ url_for('static', filename='js/main.js') }}"></script>
