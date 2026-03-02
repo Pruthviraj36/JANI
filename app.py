@@ -14,19 +14,33 @@ model = None
 encoders = {}
 features = []
 params = {}
+load_error = None
 
-try:
-    if os.path.exists(MODEL_PATH):
-        bundle = joblib.load(MODEL_PATH)
-        model = bundle['model']
-        encoders = bundle['encoders']
-        features = bundle['features']
-        params = bundle.get('params', {})
-        print(f'✅ Model successfully loaded from {MODEL_PATH}. Features: {len(features)}')
-    else:
-        print(f'❌ CRITICAL: Model file not found at {MODEL_PATH}')
-except Exception as e:
-    print(f'❌ CRITICAL: Model failed to load: {e}')
+def init_model():
+    global model, encoders, features, params, load_error
+    try:
+        print(f"🔍 [Diagnostic] CWD: {os.getcwd()}")
+        print(f"🔍 [Diagnostic] Attempting to load model from: {MODEL_PATH}")
+        
+        if os.path.exists(MODEL_PATH):
+            import joblib
+            bundle = joblib.load(MODEL_PATH)
+            model = bundle['model']
+            encoders = bundle['encoders']
+            features = bundle['features']
+            params = bundle.get('params', {})
+            print(f'✅ [Success] Model loaded. Features: {len(features)}')
+            load_error = None
+        else:
+            load_error = f"File not found at {MODEL_PATH}. Current items in JANI: {os.listdir(BASE_DIR)}"
+            print(f'❌ [Error] {load_error}')
+    except Exception as e:
+        import traceback
+        load_error = str(e)
+        print(f'❌ [Critical] Model failed to load: {e}')
+        traceback.print_exc()
+
+init_model()
 
 # ── In-memory prediction history ─────────────────────────────────
 prediction_history = []
@@ -182,11 +196,14 @@ def history():
 
 @app.route('/api/health')
 def health():
-    """Server and Model Health Check."""
+    """Server and Model Health Check with Diagnostics."""
     return jsonify({
-        'status': 'healthy',
+        'status': 'healthy' if model else 'degraded',
         'model_loaded': model is not None,
-        'features_count': len(features) if model else 0
+        'features_count': len(features) if model else 0,
+        'error': load_error if load_error else None,
+        'search_path': MODEL_PATH,
+        'cwd': os.getcwd()
     })
 
 
